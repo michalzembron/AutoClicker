@@ -29,12 +29,22 @@ namespace AutoClicker
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnClose = new System.Windows.Forms.Button();
             this.panelHeader = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.btnMinimize = new System.Windows.Forms.Button();
+            this.lblProgramName = new System.Windows.Forms.Label();
             this.btnGetMousePos = new System.Windows.Forms.Button();
+            this.lv_MousePositions = new System.Windows.Forms.ListView();
+            this.btnStartClicking = new System.Windows.Forms.Button();
+            this.numericUpDown_WaitFor = new System.Windows.Forms.NumericUpDown();
+            this.lbl_WaitFor = new System.Windows.Forms.Label();
+            this.lbl_Repeats = new System.Windows.Forms.Label();
+            this.numericUpDown_Repeats = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_InfiniteRepeats = new System.Windows.Forms.CheckBox();
             this.panelHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WaitFor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Repeats)).BeginInit();
             this.SuspendLayout();
             // 
             // btnClose
@@ -57,6 +67,7 @@ namespace AutoClicker
             // 
             this.panelHeader.BackColor = System.Drawing.Color.RoyalBlue;
             this.panelHeader.Controls.Add(this.btnMinimize);
+            this.panelHeader.Controls.Add(this.lblProgramName);
             this.panelHeader.Controls.Add(this.btnClose);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
@@ -66,21 +77,10 @@ namespace AutoClicker
             this.panelHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelHeader_MouseDown);
             this.panelHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelHeader_MouseMove);
             // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(156, 107);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 15);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "label1";
-            // 
             // btnMinimize
             // 
             this.btnMinimize.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatAppearance.MouseOverBackColor = System.Drawing.Color.CornflowerBlue;
             this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMinimize.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.btnMinimize.ForeColor = System.Drawing.Color.White;
@@ -92,31 +92,148 @@ namespace AutoClicker
             this.btnMinimize.UseVisualStyleBackColor = true;
             this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             // 
+            // lblProgramName
+            // 
+            this.lblProgramName.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblProgramName.AutoSize = true;
+            this.lblProgramName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lblProgramName.ForeColor = System.Drawing.Color.White;
+            this.lblProgramName.Location = new System.Drawing.Point(3, 5);
+            this.lblProgramName.Name = "lblProgramName";
+            this.lblProgramName.Size = new System.Drawing.Size(82, 19);
+            this.lblProgramName.TabIndex = 4;
+            this.lblProgramName.Text = "AutoClicker";
+            // 
             // btnGetMousePos
             // 
-            this.btnGetMousePos.Location = new System.Drawing.Point(316, 161);
+            this.btnGetMousePos.Location = new System.Drawing.Point(373, 37);
             this.btnGetMousePos.Name = "btnGetMousePos";
-            this.btnGetMousePos.Size = new System.Drawing.Size(75, 23);
+            this.btnGetMousePos.Size = new System.Drawing.Size(57, 23);
             this.btnGetMousePos.TabIndex = 5;
-            this.btnGetMousePos.Text = "Mouse";
+            this.btnGetMousePos.Text = "Drag";
             this.btnGetMousePos.UseVisualStyleBackColor = true;
-            this.btnGetMousePos.Click += new System.EventHandler(this.btnGetMousePos_Click);
+            this.btnGetMousePos.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnGetMousePos_MouseUp);
+            // 
+            // lv_MousePositions
+            // 
+            this.lv_MousePositions.HideSelection = false;
+            this.lv_MousePositions.Location = new System.Drawing.Point(436, 37);
+            this.lv_MousePositions.Name = "lv_MousePositions";
+            this.lv_MousePositions.Size = new System.Drawing.Size(119, 233);
+            this.lv_MousePositions.TabIndex = 6;
+            this.lv_MousePositions.UseCompatibleStateImageBehavior = false;
+            this.lv_MousePositions.View = System.Windows.Forms.View.Details;
+            // 
+            // btnStartClicking
+            // 
+            this.btnStartClicking.Location = new System.Drawing.Point(12, 378);
+            this.btnStartClicking.Name = "btnStartClicking";
+            this.btnStartClicking.Size = new System.Drawing.Size(104, 23);
+            this.btnStartClicking.TabIndex = 7;
+            this.btnStartClicking.Text = "Start Clicking !";
+            this.btnStartClicking.UseVisualStyleBackColor = true;
+            this.btnStartClicking.Click += new System.EventHandler(this.btnStartClicking_Click);
+            // 
+            // numericUpDown_WaitFor
+            // 
+            this.numericUpDown_WaitFor.Location = new System.Drawing.Point(120, 37);
+            this.numericUpDown_WaitFor.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_WaitFor.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_WaitFor.Name = "numericUpDown_WaitFor";
+            this.numericUpDown_WaitFor.Size = new System.Drawing.Size(120, 23);
+            this.numericUpDown_WaitFor.TabIndex = 9;
+            this.numericUpDown_WaitFor.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lbl_WaitFor
+            // 
+            this.lbl_WaitFor.AutoSize = true;
+            this.lbl_WaitFor.ForeColor = System.Drawing.Color.White;
+            this.lbl_WaitFor.Location = new System.Drawing.Point(4, 41);
+            this.lbl_WaitFor.Name = "lbl_WaitFor";
+            this.lbl_WaitFor.Size = new System.Drawing.Size(110, 15);
+            this.lbl_WaitFor.TabIndex = 10;
+            this.lbl_WaitFor.Text = "Click interval (.ms)";
+            // 
+            // lbl_Repeats
+            // 
+            this.lbl_Repeats.AutoSize = true;
+            this.lbl_Repeats.ForeColor = System.Drawing.Color.White;
+            this.lbl_Repeats.Location = new System.Drawing.Point(4, 77);
+            this.lbl_Repeats.Name = "lbl_Repeats";
+            this.lbl_Repeats.Size = new System.Drawing.Size(50, 15);
+            this.lbl_Repeats.TabIndex = 11;
+            this.lbl_Repeats.Text = "Repeats";
+            // 
+            // numericUpDown_Repeats
+            // 
+            this.numericUpDown_Repeats.Location = new System.Drawing.Point(120, 75);
+            this.numericUpDown_Repeats.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_Repeats.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_Repeats.Name = "numericUpDown_Repeats";
+            this.numericUpDown_Repeats.Size = new System.Drawing.Size(120, 23);
+            this.numericUpDown_Repeats.TabIndex = 12;
+            this.numericUpDown_Repeats.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // checkBox_InfiniteRepeats
+            // 
+            this.checkBox_InfiniteRepeats.AutoSize = true;
+            this.checkBox_InfiniteRepeats.ForeColor = System.Drawing.Color.White;
+            this.checkBox_InfiniteRepeats.Location = new System.Drawing.Point(246, 77);
+            this.checkBox_InfiniteRepeats.Name = "checkBox_InfiniteRepeats";
+            this.checkBox_InfiniteRepeats.Size = new System.Drawing.Size(65, 19);
+            this.checkBox_InfiniteRepeats.TabIndex = 13;
+            this.checkBox_InfiniteRepeats.Text = "Infinite";
+            this.checkBox_InfiniteRepeats.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Gainsboro;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(567, 413);
+            this.Controls.Add(this.checkBox_InfiniteRepeats);
+            this.Controls.Add(this.numericUpDown_Repeats);
+            this.Controls.Add(this.lbl_Repeats);
+            this.Controls.Add(this.lbl_WaitFor);
+            this.Controls.Add(this.numericUpDown_WaitFor);
+            this.Controls.Add(this.btnStartClicking);
+            this.Controls.Add(this.lv_MousePositions);
             this.Controls.Add(this.btnGetMousePos);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.panelHeader);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Form1";
             this.panelHeader.ResumeLayout(false);
+            this.panelHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WaitFor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Repeats)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -125,9 +242,16 @@ namespace AutoClicker
         #endregion
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Panel panelHeader;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblProgramName;
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Button btnGetMousePos;
+        private System.Windows.Forms.ListView lv_MousePositions;
+        private System.Windows.Forms.Button btnStartClicking;
+        private System.Windows.Forms.NumericUpDown numericUpDown_WaitFor;
+        private System.Windows.Forms.Label lbl_WaitFor;
+        private System.Windows.Forms.Label lbl_Repeats;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Repeats;
+        private System.Windows.Forms.CheckBox checkBox_InfiniteRepeats;
     }
 }
 
