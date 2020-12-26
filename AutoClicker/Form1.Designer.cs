@@ -58,6 +58,7 @@ namespace AutoClicker
             this.lbl_ClickType = new System.Windows.Forms.Label();
             this.comboBox_ClickType = new System.Windows.Forms.ComboBox();
             this.groupBox_ClickLocations = new System.Windows.Forms.GroupBox();
+            this.btn_checkForUpdates = new System.Windows.Forms.Button();
             this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox_ClickInterval.SuspendLayout();
@@ -132,7 +133,7 @@ namespace AutoClicker
             this.lblProgramName.Name = "lblProgramName";
             this.lblProgramName.Size = new System.Drawing.Size(118, 19);
             this.lblProgramName.TabIndex = 4;
-            this.lblProgramName.Text = "AutoClicker 1.2.0";
+            this.lblProgramName.Text = "AutoClicker 1.2.1";
             // 
             // btnGetMousePos
             // 
@@ -385,12 +386,23 @@ namespace AutoClicker
             this.groupBox_ClickLocations.TabStop = false;
             this.groupBox_ClickLocations.Text = "Click Locations:";
             // 
+            // btn_checkForUpdates
+            // 
+            this.btn_checkForUpdates.Location = new System.Drawing.Point(305, 378);
+            this.btn_checkForUpdates.Name = "btn_checkForUpdates";
+            this.btn_checkForUpdates.Size = new System.Drawing.Size(113, 23);
+            this.btn_checkForUpdates.TabIndex = 33;
+            this.btn_checkForUpdates.Text = "Check for updates";
+            this.btn_checkForUpdates.UseVisualStyleBackColor = true;
+            this.btn_checkForUpdates.Click += new System.EventHandler(this.btn_checkForUpdates_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(567, 413);
+            this.Controls.Add(this.btn_checkForUpdates);
             this.Controls.Add(this.groupBox_ClickLocations);
             this.Controls.Add(this.groupBox_ClickOptions);
             this.Controls.Add(this.groupBox_Repeats);
@@ -447,6 +459,7 @@ namespace AutoClicker
         private System.Windows.Forms.Label lbl_ClickType;
         private System.Windows.Forms.ComboBox comboBox_ClickType;
         private System.Windows.Forms.GroupBox groupBox_ClickLocations;
+        private System.Windows.Forms.Button btn_checkForUpdates;
     }
 }
 

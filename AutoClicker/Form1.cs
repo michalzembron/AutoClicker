@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Octokit;
 
 namespace AutoClicker
 {
@@ -32,14 +34,47 @@ namespace AutoClicker
             comboBox_ClickType.SelectedIndex = 0;
         }
 
-        async Task PutTaskDelay()
+        private async Task PutTaskDelay()
         {
             await Task.Delay(waitFor);
         }
 
+        private async Task CheckGitHubNewerVersion()
+        {
+            GitHubClient client = new GitHubClient(new ProductHeaderValue("MZ-Auto-Clicker"));
+            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("michalzembron", "MZ-Auto-Clicker");
+
+            Version latestGitHubVersion = new Version(releases[0].TagName);
+            Version localVersion = new Version("1.2.1"); 
+
+            Console.WriteLine("The latest release is tagged at {0}", latestGitHubVersion);
+
+            Console.Write("Version {0} is ", localVersion);
+            switch (localVersion.CompareTo(latestGitHubVersion))
+            {
+                case 0:
+                    Console.Write("the same as");
+                    MessageBox.Show(localVersion + " is newest version of MZ Auto Clicker, there is no need to update.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case 1:
+                    Console.Write("later than");
+                    MessageBox.Show(localVersion + " is newest version of MZ Auto Clicker, there is no need to update.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case -1:
+                    Console.Write("earlier than");
+                    if (MessageBox.Show("Local version is: " + localVersion + ", but the newest version of MZ Auto Clicker is: " + latestGitHubVersion +
+                            "\n\nPress \"YES\" to go to download newest release.", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        Process.Start("https://github.com/michalzembron/MZ-Auto-Clicker/releases");
+                    }
+                    break;
+            }
+            Console.WriteLine(" Version {0}.", latestGitHubVersion);
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         private void panelHeader_MouseMove(object sender, MouseEventArgs e)
@@ -195,6 +230,11 @@ namespace AutoClicker
         private void radioButton_Infinite_CheckedChanged(object sender, EventArgs e)
         {
             textBox_Repeats.Enabled = false;
+        }
+
+        private async void btn_checkForUpdates_Click(object sender, EventArgs e)
+        {
+            await CheckGitHubNewerVersion();
         }
     }
 }
