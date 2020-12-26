@@ -42,6 +42,7 @@ namespace AutoClicker
             this.lbl_Repeats = new System.Windows.Forms.Label();
             this.numericUpDown_Repeats = new System.Windows.Forms.NumericUpDown();
             this.checkBox_InfiniteRepeats = new System.Windows.Forms.CheckBox();
+            this.btnStopClicking = new System.Windows.Forms.Button();
             this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WaitFor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Repeats)).BeginInit();
@@ -106,9 +107,9 @@ namespace AutoClicker
             // 
             // btnGetMousePos
             // 
-            this.btnGetMousePos.Location = new System.Drawing.Point(373, 37);
+            this.btnGetMousePos.Location = new System.Drawing.Point(462, 276);
             this.btnGetMousePos.Name = "btnGetMousePos";
-            this.btnGetMousePos.Size = new System.Drawing.Size(57, 23);
+            this.btnGetMousePos.Size = new System.Drawing.Size(66, 23);
             this.btnGetMousePos.TabIndex = 5;
             this.btnGetMousePos.Text = "Drag";
             this.btnGetMousePos.UseVisualStyleBackColor = true;
@@ -209,12 +210,23 @@ namespace AutoClicker
             this.checkBox_InfiniteRepeats.Text = "Infinite";
             this.checkBox_InfiniteRepeats.UseVisualStyleBackColor = true;
             // 
+            // btnStopClicking
+            // 
+            this.btnStopClicking.Location = new System.Drawing.Point(122, 378);
+            this.btnStopClicking.Name = "btnStopClicking";
+            this.btnStopClicking.Size = new System.Drawing.Size(55, 23);
+            this.btnStopClicking.TabIndex = 14;
+            this.btnStopClicking.Text = "Stop !";
+            this.btnStopClicking.UseVisualStyleBackColor = true;
+            this.btnStopClicking.Click += new System.EventHandler(this.btnStopClicking_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(567, 413);
+            this.Controls.Add(this.btnStopClicking);
             this.Controls.Add(this.checkBox_InfiniteRepeats);
             this.Controls.Add(this.numericUpDown_Repeats);
             this.Controls.Add(this.lbl_Repeats);
@@ -252,6 +264,7 @@ namespace AutoClicker
         private System.Windows.Forms.Label lbl_Repeats;
         private System.Windows.Forms.NumericUpDown numericUpDown_Repeats;
         private System.Windows.Forms.CheckBox checkBox_InfiniteRepeats;
+        private System.Windows.Forms.Button btnStopClicking;
     }
 }
 

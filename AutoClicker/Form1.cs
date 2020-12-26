@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutoClicker
@@ -9,6 +10,8 @@ namespace AutoClicker
     public partial class Form1 : Form
     {
         Point lastPoint;
+        bool isStopped;
+        string currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
@@ -16,6 +19,7 @@ namespace AutoClicker
         public Form1()
         {
             InitializeComponent();
+            isStopped = false;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -50,9 +54,10 @@ namespace AutoClicker
             lv_MousePositions.Items.Add(Cursor.Position.ToString());
         }
 
-        private void btnStartClicking_Click(object sender, EventArgs e)
+        private async void btnStartClicking_Click(object sender, EventArgs e)
         {
-            if(lv_MousePositions.Items.Count != 0)
+            isStopped = false;
+            if (lv_MousePositions.Items.Count != 0)
             {
                 if (checkBox_InfiniteRepeats.Checked == true)
                 {
@@ -60,6 +65,7 @@ namespace AutoClicker
                     {
                         for (int currentMousePosItem = 0; currentMousePosItem < lv_MousePositions.Items.Count; currentMousePosItem++)
                         {
+                            if (isStopped) break;
                             string test = lv_MousePositions.Items[currentMousePosItem].ToString().Replace("ListViewItem: {{X=", "").Replace("Y=", "").Replace("}", "");
                             string[] test2 = test.Split(new char[] { ',' }, 2);
                             Cursor.Position = new Point(Int32.Parse(test2[0]), Int32.Parse(test2[1]));
@@ -73,15 +79,27 @@ namespace AutoClicker
                     {
                         for (int currentMousePosItem = 0; currentMousePosItem < lv_MousePositions.Items.Count; currentMousePosItem++)
                         {
+                            if (isStopped) break;
                             string test = lv_MousePositions.Items[currentMousePosItem].ToString().Replace("ListViewItem: {{X=", "").Replace("Y=", "").Replace("}", "");
                             string[] test2 = test.Split(new char[] { ',' }, 2);
                             Cursor.Position = new Point(Int32.Parse(test2[0]), Int32.Parse(test2[1]));
                             mouse_event(0x02 | 0x04, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                            Thread.Sleep((int)numericUpDown_WaitFor.Value);
+                            //Thread.Sleep((int)numericUpDown_WaitFor.Value);
+                            await PutTaskDelay();
                         }
                     }
                 }
             }
+        }
+
+        private void btnStopClicking_Click(object sender, EventArgs e)
+        {
+            isStopped = true;
+        }
+
+        async Task PutTaskDelay()
+        {
+            await Task.Delay((int)numericUpDown_WaitFor.Value);
         }
     }
 }
