@@ -1,4 +1,6 @@
 # MZ Auto Clicker
+# [Download latest release here](https://github.com/michalzembron/MZ-Auto-Clicker/releases "Newest release")
+
 + Set click intervals
 + Set click repeats (can be set to infinite)
 + Click options (Left, Middle, Right)
@@ -7,7 +9,7 @@
 + Register where to click by drag and drop
 + Start and Stop with global hotkeys (They work even if program is minimalized)
 
-[Download latest release here](https://github.com/michalzembron/MZ-Auto-Clicker/releases "Newest release")
+Something is missing ? Ask for a feature in [Issues Tab](https://github.com/michalzembron/MZ-Auto-Clicker/issues/new "Issues Tab") !
 
 ![MZ Auto Clicker 1.3.0](https://i.imgur.com/y3mVogD.png)
 
