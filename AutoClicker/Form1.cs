@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Octokit;
@@ -12,7 +11,6 @@ namespace AutoClicker
 {
     public partial class Form1 : Form
     {
-        Point lastPoint;
         bool isStopped;
         int waitFor;
 
@@ -32,6 +30,30 @@ namespace AutoClicker
             comboBox_ClickType.Items.Insert(1, "Double");
             comboBox_ClickType.Items.Insert(2, "Triple");
             comboBox_ClickType.SelectedIndex = 0;
+
+            RegisterHotKey(Handle, 0, 0x0002, (int)Keys.F10);
+            RegisterHotKey(Handle, 1, 0x0002, (int)Keys.F11);
+        }
+
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+        //[DllImport("user32.dll")]
+        //public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x0312)
+            {
+                if (m.WParam.ToInt32() == 0)
+                {
+                    btnStartClicking.PerformClick();
+                }
+                else if (m.WParam.ToInt32() == 1)
+                {
+                    btnStopClicking.PerformClick();
+                }
+            }
+            base.WndProc(ref m);
         }
 
         private async Task PutTaskDelay()
@@ -45,7 +67,7 @@ namespace AutoClicker
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("michalzembron", "MZ-Auto-Clicker");
 
             Version latestGitHubVersion = new Version(releases[0].TagName);
-            Version localVersion = new Version("1.2.1"); 
+            Version localVersion = new Version("1.3.0"); 
 
             Console.WriteLine("The latest release is tagged at {0}", latestGitHubVersion);
 
@@ -70,30 +92,6 @@ namespace AutoClicker
                     break;
             }
             Console.WriteLine(" Version {0}.", latestGitHubVersion);
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            System.Windows.Forms.Application.Exit();
-        }
-
-        private void panelHeader_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                Left += e.X - lastPoint.X;
-                Top += e.Y - lastPoint.Y;
-            }
-        }
-
-        private void panelHeader_MouseDown(object sender, MouseEventArgs e)
-        {
-            lastPoint = new Point(e.X, e.Y);
-        }
-
-        private void btnMinimize_Click(object sender, EventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
         }
 
         private void btnGetMousePos_MouseUp(object sender, MouseEventArgs e)

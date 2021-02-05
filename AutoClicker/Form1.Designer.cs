@@ -30,11 +30,6 @@ namespace AutoClicker
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.btnClose = new System.Windows.Forms.Button();
-            this.panelHeader = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.btnMinimize = new System.Windows.Forms.Button();
-            this.lblProgramName = new System.Windows.Forms.Label();
             this.btnGetMousePos = new System.Windows.Forms.Button();
             this.lv_MousePositions = new System.Windows.Forms.ListView();
             this.btnStartClicking = new System.Windows.Forms.Button();
@@ -59,81 +54,11 @@ namespace AutoClicker
             this.comboBox_ClickType = new System.Windows.Forms.ComboBox();
             this.groupBox_ClickLocations = new System.Windows.Forms.GroupBox();
             this.btn_checkForUpdates = new System.Windows.Forms.Button();
-            this.panelHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox_ClickInterval.SuspendLayout();
             this.groupBox_Repeats.SuspendLayout();
             this.groupBox_ClickOptions.SuspendLayout();
             this.groupBox_ClickLocations.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnClose
-            // 
-            this.btnClose.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Calibri Light", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(519, 0);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(48, 31);
-            this.btnClose.TabIndex = 2;
-            this.btnClose.Text = "✕";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // panelHeader
-            // 
-            this.panelHeader.BackColor = System.Drawing.Color.RoyalBlue;
-            this.panelHeader.Controls.Add(this.pictureBox2);
-            this.panelHeader.Controls.Add(this.btnMinimize);
-            this.panelHeader.Controls.Add(this.lblProgramName);
-            this.panelHeader.Controls.Add(this.btnClose);
-            this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(567, 31);
-            this.panelHeader.TabIndex = 3;
-            this.panelHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelHeader_MouseDown);
-            this.panelHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelHeader_MouseMove);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(30, 31);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnMinimize.ForeColor = System.Drawing.Color.White;
-            this.btnMinimize.Location = new System.Drawing.Point(471, 0);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(48, 31);
-            this.btnMinimize.TabIndex = 3;
-            this.btnMinimize.Text = "-";
-            this.btnMinimize.UseVisualStyleBackColor = true;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
-            // lblProgramName
-            // 
-            this.lblProgramName.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblProgramName.AutoSize = true;
-            this.lblProgramName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lblProgramName.ForeColor = System.Drawing.Color.White;
-            this.lblProgramName.Location = new System.Drawing.Point(32, 7);
-            this.lblProgramName.Name = "lblProgramName";
-            this.lblProgramName.Size = new System.Drawing.Size(118, 19);
-            this.lblProgramName.TabIndex = 4;
-            this.lblProgramName.Text = "AutoClicker 1.2.1";
             // 
             // btnGetMousePos
             // 
@@ -160,19 +85,19 @@ namespace AutoClicker
             // 
             this.btnStartClicking.Location = new System.Drawing.Point(12, 378);
             this.btnStartClicking.Name = "btnStartClicking";
-            this.btnStartClicking.Size = new System.Drawing.Size(67, 23);
+            this.btnStartClicking.Size = new System.Drawing.Size(109, 23);
             this.btnStartClicking.TabIndex = 7;
-            this.btnStartClicking.Text = "Start";
+            this.btnStartClicking.Text = "Start (Ctrl + F10)";
             this.btnStartClicking.UseVisualStyleBackColor = true;
             this.btnStartClicking.Click += new System.EventHandler(this.btnStartClicking_Click);
             // 
             // btnStopClicking
             // 
-            this.btnStopClicking.Location = new System.Drawing.Point(85, 378);
+            this.btnStopClicking.Location = new System.Drawing.Point(127, 378);
             this.btnStopClicking.Name = "btnStopClicking";
-            this.btnStopClicking.Size = new System.Drawing.Size(67, 23);
+            this.btnStopClicking.Size = new System.Drawing.Size(109, 23);
             this.btnStopClicking.TabIndex = 14;
-            this.btnStopClicking.Text = "Stop";
+            this.btnStopClicking.Text = "Stop (Ctrl + F11)";
             this.btnStopClicking.UseVisualStyleBackColor = true;
             this.btnStopClicking.Click += new System.EventHandler(this.btnStopClicking_Click);
             // 
@@ -322,7 +247,7 @@ namespace AutoClicker
             this.groupBox_ClickInterval.Controls.Add(this.label_s);
             this.groupBox_ClickInterval.Controls.Add(this.label_ms);
             this.groupBox_ClickInterval.ForeColor = System.Drawing.Color.White;
-            this.groupBox_ClickInterval.Location = new System.Drawing.Point(7, 37);
+            this.groupBox_ClickInterval.Location = new System.Drawing.Point(7, 12);
             this.groupBox_ClickInterval.Name = "groupBox_ClickInterval";
             this.groupBox_ClickInterval.Size = new System.Drawing.Size(351, 56);
             this.groupBox_ClickInterval.TabIndex = 29;
@@ -335,7 +260,7 @@ namespace AutoClicker
             this.groupBox_Repeats.Controls.Add(this.textBox_Repeats);
             this.groupBox_Repeats.Controls.Add(this.radioButton_Infinite);
             this.groupBox_Repeats.ForeColor = System.Drawing.Color.White;
-            this.groupBox_Repeats.Location = new System.Drawing.Point(7, 99);
+            this.groupBox_Repeats.Location = new System.Drawing.Point(7, 74);
             this.groupBox_Repeats.Name = "groupBox_Repeats";
             this.groupBox_Repeats.Size = new System.Drawing.Size(351, 71);
             this.groupBox_Repeats.TabIndex = 30;
@@ -349,7 +274,7 @@ namespace AutoClicker
             this.groupBox_ClickOptions.Controls.Add(this.lbl_MouseButton);
             this.groupBox_ClickOptions.Controls.Add(this.comboBox_MouseButton);
             this.groupBox_ClickOptions.ForeColor = System.Drawing.Color.White;
-            this.groupBox_ClickOptions.Location = new System.Drawing.Point(7, 176);
+            this.groupBox_ClickOptions.Location = new System.Drawing.Point(7, 151);
             this.groupBox_ClickOptions.Name = "groupBox_ClickOptions";
             this.groupBox_ClickOptions.Size = new System.Drawing.Size(351, 80);
             this.groupBox_ClickOptions.TabIndex = 31;
@@ -379,7 +304,7 @@ namespace AutoClicker
             this.groupBox_ClickLocations.Controls.Add(this.lv_MousePositions);
             this.groupBox_ClickLocations.Controls.Add(this.btnGetMousePos);
             this.groupBox_ClickLocations.ForeColor = System.Drawing.Color.White;
-            this.groupBox_ClickLocations.Location = new System.Drawing.Point(424, 37);
+            this.groupBox_ClickLocations.Location = new System.Drawing.Point(364, 12);
             this.groupBox_ClickLocations.Name = "groupBox_ClickLocations";
             this.groupBox_ClickLocations.Size = new System.Drawing.Size(131, 364);
             this.groupBox_ClickLocations.TabIndex = 32;
@@ -388,9 +313,9 @@ namespace AutoClicker
             // 
             // btn_checkForUpdates
             // 
-            this.btn_checkForUpdates.Location = new System.Drawing.Point(305, 378);
+            this.btn_checkForUpdates.Location = new System.Drawing.Point(7, 237);
             this.btn_checkForUpdates.Name = "btn_checkForUpdates";
-            this.btn_checkForUpdates.Size = new System.Drawing.Size(113, 23);
+            this.btn_checkForUpdates.Size = new System.Drawing.Size(114, 23);
             this.btn_checkForUpdates.TabIndex = 33;
             this.btn_checkForUpdates.Text = "Check for updates";
             this.btn_checkForUpdates.UseVisualStyleBackColor = true;
@@ -401,7 +326,7 @@ namespace AutoClicker
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(567, 413);
+            this.ClientSize = new System.Drawing.Size(504, 413);
             this.Controls.Add(this.btn_checkForUpdates);
             this.Controls.Add(this.groupBox_ClickLocations);
             this.Controls.Add(this.groupBox_ClickOptions);
@@ -409,16 +334,13 @@ namespace AutoClicker
             this.Controls.Add(this.groupBox_ClickInterval);
             this.Controls.Add(this.btnStopClicking);
             this.Controls.Add(this.btnStartClicking);
-            this.Controls.Add(this.panelHeader);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Auto Clicker";
-            this.panelHeader.ResumeLayout(false);
-            this.panelHeader.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.Text = "MZ Auto Clicker 1.3.0";
             this.groupBox_ClickInterval.ResumeLayout(false);
             this.groupBox_ClickInterval.PerformLayout();
             this.groupBox_Repeats.ResumeLayout(false);
@@ -431,15 +353,10 @@ namespace AutoClicker
         }
 
         #endregion
-        private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.Panel panelHeader;
-        private System.Windows.Forms.Label lblProgramName;
-        private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Button btnGetMousePos;
         private System.Windows.Forms.ListView lv_MousePositions;
         private System.Windows.Forms.Button btnStartClicking;
         private System.Windows.Forms.Button btnStopClicking;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox textBox_Hours;
         private System.Windows.Forms.Label label_h;
         private System.Windows.Forms.Label label_m;
