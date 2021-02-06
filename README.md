@@ -11,6 +11,6 @@
 
 Something is missing ? Ask for a feature in [Issues Tab](https://github.com/michalzembron/MZ-Auto-Clicker/issues/new "Issues Tab") !
 
-![MZ Auto Clicker 1.3.0](https://i.imgur.com/y3mVogD.png)
+![MZ Auto Clicker 1.3.1](https://i.imgur.com/HywJtOk.png)
 
-[Virus Total Check](https://www.virustotal.com/gui/file/f8a2a0404378eccb26af3f1c1693e5ec8b3056f5d363d7df6e100c963622232c/detection "Virus Total Page") - Clean !
+[Virus Total Check](https://www.virustotal.com/gui/file/08f190b2dafb22e955d1c7f26ea621e18fef91edb24b771a2139688cfd1847fb/detection "Virus Total Page") - Clean !
