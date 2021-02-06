@@ -1,7 +1,7 @@
 ﻿
 namespace AutoClicker
 {
-    partial class Form1
+    partial class MZAC_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,8 @@ namespace AutoClicker
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MZAC_Form));
             this.btnGetMousePos = new System.Windows.Forms.Button();
             this.lv_MousePositions = new System.Windows.Forms.ListView();
             this.btnStartClicking = new System.Windows.Forms.Button();
@@ -54,6 +55,7 @@ namespace AutoClicker
             this.comboBox_ClickType = new System.Windows.Forms.ComboBox();
             this.groupBox_ClickLocations = new System.Windows.Forms.GroupBox();
             this.btn_checkForUpdates = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox_ClickInterval.SuspendLayout();
             this.groupBox_Repeats.SuspendLayout();
             this.groupBox_ClickOptions.SuspendLayout();
@@ -321,7 +323,14 @@ namespace AutoClicker
             this.btn_checkForUpdates.UseVisualStyleBackColor = true;
             this.btn_checkForUpdates.Click += new System.EventHandler(this.btn_checkForUpdates_Click);
             // 
-            // Form1
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "MZ Auto Clicker";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // MZAC_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -339,8 +348,9 @@ namespace AutoClicker
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
-            this.Text = "MZ Auto Clicker 1.3.0";
+            this.Name = "MZAC_Form";
+            this.Text = "MZ Auto Clicker 0.0.0";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.groupBox_ClickInterval.ResumeLayout(false);
             this.groupBox_ClickInterval.PerformLayout();
             this.groupBox_Repeats.ResumeLayout(false);
@@ -377,6 +387,7 @@ namespace AutoClicker
         private System.Windows.Forms.ComboBox comboBox_ClickType;
         private System.Windows.Forms.GroupBox groupBox_ClickLocations;
         private System.Windows.Forms.Button btn_checkForUpdates;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

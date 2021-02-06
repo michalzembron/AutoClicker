@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,17 +10,20 @@ using Octokit;
 
 namespace AutoClicker
 {
-    public partial class Form1 : Form
+    public partial class MZAC_Form : Form
     {
         bool isStopped;
         int waitFor;
+        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public ContextMenu contextMenu_notifyIcon = new ContextMenu();
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
 
-        public Form1()
+        public MZAC_Form()
         {
             InitializeComponent();
+            this.Text = "MZ Auto Clicker " + version.Remove(version.Length - 2, 2);
             isStopped = false;
             comboBox_MouseButton.Items.Insert(0, "Left");
             comboBox_MouseButton.Items.Insert(1, "Middle");
@@ -33,6 +37,8 @@ namespace AutoClicker
 
             RegisterHotKey(Handle, 0, 0x0002, (int)Keys.F10);
             RegisterHotKey(Handle, 1, 0x0002, (int)Keys.F11);
+
+            createIconMenuStructure();
         }
 
         [DllImport("user32.dll")]
@@ -67,9 +73,9 @@ namespace AutoClicker
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("michalzembron", "MZ-Auto-Clicker");
 
             Version latestGitHubVersion = new Version(releases[0].TagName);
-            Version localVersion = new Version("1.3.0"); 
+            Version localVersion = new Version(version.Remove(version.Length - 2, 2)); 
 
-            Console.WriteLine("The latest release is tagged at {0}", latestGitHubVersion);
+            Console.WriteLine("The latest github release is tagged at {0}, current is {1}", latestGitHubVersion, version);
 
             Console.Write("Version {0} is ", localVersion);
             switch (localVersion.CompareTo(latestGitHubVersion))
@@ -85,7 +91,7 @@ namespace AutoClicker
                 case -1:
                     Console.Write("earlier than");
                     if (MessageBox.Show("Local version is: " + localVersion + ", but the newest version of MZ Auto Clicker is: " + latestGitHubVersion +
-                            "\n\nPress \"YES\" to go to download newest release.", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                            "\n\nPress \"YES\" to go to the latest version download page (GitHub).", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         Process.Start("https://github.com/michalzembron/MZ-Auto-Clicker/releases");
                     }
@@ -104,6 +110,10 @@ namespace AutoClicker
 
         private async void btnStartClicking_Click(object sender, EventArgs e)
         {
+            // Hide program to system tray 
+            Hide();
+            notifyIcon.Visible = true;
+
             isStopped = false;
             int[] clickIntervals = new int[4];
             int repeats;
@@ -233,6 +243,37 @@ namespace AutoClicker
         private async void btn_checkForUpdates_Click(object sender, EventArgs e)
         {
             await CheckGitHubNewerVersion();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            //if the form is minimized  
+            //hide it from the task bar  
+            //and show the system tray icon (represented by the NotifyIcon control)  
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                notifyIcon.Visible = true;
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            openFromNotifyIcon();
+        }
+
+        private void openFromNotifyIcon()
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
+        }
+
+        public void createIconMenuStructure()
+        {
+            contextMenu_notifyIcon.MenuItems.Add("Open MZ Auto Clicker", (s,e) => openFromNotifyIcon());
+            contextMenu_notifyIcon.MenuItems.Add("Exit", (s, e) => System.Windows.Forms.Application.Exit());
+            notifyIcon.ContextMenu = contextMenu_notifyIcon;
         }
     }
 }
