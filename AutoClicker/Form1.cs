@@ -1,50 +1,114 @@
-﻿using System;
+﻿using MZAutoClicker;
+using Octokit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Octokit;
 
 namespace AutoClicker
 {
     public partial class MZAC_Form : Form
     {
-        bool isStopped;
-        int waitFor;
-        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public ContextMenu contextMenu_notifyIcon = new ContextMenu();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+        IntPtr programHandle;
+        PerformMouseClick performMouseClick = new PerformMouseClick();
 
         public MZAC_Form()
         {
             InitializeComponent();
             this.Text = "MZ Auto Clicker " + version.Remove(version.Length - 2, 2);
-            isStopped = false;
-            comboBox_MouseButton.Items.Insert(0, "Left");
-            comboBox_MouseButton.Items.Insert(1, "Middle");
-            comboBox_MouseButton.Items.Insert(2, "Right");
-            comboBox_MouseButton.SelectedIndex = 0;
 
-            comboBox_ClickType.Items.Insert(0, "Single");
-            comboBox_ClickType.Items.Insert(1, "Double");
-            comboBox_ClickType.Items.Insert(2, "Triple");
+            comboBox_MouseButton.SelectedIndex = 0;
             comboBox_ClickType.SelectedIndex = 0;
 
-            RegisterHotKey(Handle, 0, 0x0002, (int)Keys.F10);
-            RegisterHotKey(Handle, 1, 0x0002, (int)Keys.F11);
+            programHandle = Handle;
+            RegisterHotKey(programHandle, 0, 0x0002, (int)Keys.F10);
+            RegisterHotKey(programHandle, 1, 0x0002, (int)Keys.F11);
+            RegisterHotKey(programHandle, 2, 0x0002 | 0x0004, (int)Keys.F1);
+
+            lv_MousePositions.Enabled = false;
+            btnGetMousePos.Enabled = false;
+
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             createIconMenuStructure();
         }
 
+        #region Start and Stop clicking
+
+        /// <summary>
+        /// This region contains Start and Stop clicking functionality.
+        /// </summary>
+
+        int waitFor;
+
+        private void btnStartClicking_Click(object sender, EventArgs e)
+        {
+            int[] clickIntervals = new int[4];
+            int repeats;
+
+            Int32.TryParse(textBox_Hours.Text, out clickIntervals[0]);
+            Int32.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
+            Int32.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
+            Int32.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
+            waitFor = (clickIntervals[0] * 3600000) + (clickIntervals[1] * 60000) + (clickIntervals[2] * 1000) + clickIntervals[3];
+
+            Int32.TryParse(textBox_Repeats.Text, out repeats);
+
+            Hide();
+            notifyIcon.Visible = true;
+            if (radioButton_CurrentMousePos.Checked)
+            {
+                performMouseClick.StartClicking(waitFor, repeats, "ClickOnCurrentMousePosition", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
+            }
+            else if (radioButton_ClickLocList.Checked)
+            {
+                performMouseClick.StartClicking(waitFor, repeats, "ClickLocationList", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
+            }
+        }
+
+        private void btnStopClicking_Click(object sender, EventArgs e)
+        {
+            performMouseClick.isStopped = true;
+        }
+
+        private void StartClicking()
+        {
+            int[] clickIntervals = new int[4];
+            int repeats;
+
+            Int32.TryParse(textBox_Hours.Text, out clickIntervals[0]);
+            Int32.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
+            Int32.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
+            Int32.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
+            waitFor = (clickIntervals[0] * 3600000) + (clickIntervals[1] * 60000) + (clickIntervals[2] * 1000) + clickIntervals[3];
+
+            Int32.TryParse(textBox_Repeats.Text, out repeats);
+
+            Hide();
+            notifyIcon.Visible = true;
+            performMouseClick.StartClicking(waitFor, repeats, "ClickLocationList", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
+        }
+
+        private void StopClicking()
+        {
+            Console.WriteLine("STOP (Form1-StopClicking)");
+            performMouseClick.isStopped = true;
+        }
+        #endregion
+
+        #region HotKey registration
+
+        /// <summary>
+        /// This region contains HotKey registration functionality.
+        /// </summary>
+
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
-        //[DllImport("user32.dll")]
-        //public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         protected override void WndProc(ref Message m)
         {
@@ -52,20 +116,31 @@ namespace AutoClicker
             {
                 if (m.WParam.ToInt32() == 0)
                 {
-                    btnStartClicking.PerformClick();
+                    StartClicking();
                 }
                 else if (m.WParam.ToInt32() == 1)
                 {
-                    btnStopClicking.PerformClick();
+                    StopClicking();
+                }
+                else if (m.WParam.ToInt32() == 2)
+                {
+                    lv_MousePositions.Columns.Add("OneColumn");
+                    lv_MousePositions.Columns[0].Width = this.lv_MousePositions.Width - 4;
+                    lv_MousePositions.HeaderStyle = ColumnHeaderStyle.None;
+                    lv_MousePositions.Items.Add(Cursor.Position.ToString());
                 }
             }
             base.WndProc(ref m);
         }
+        #endregion
 
-        private async Task PutTaskDelay()
-        {
-            await Task.Delay(waitFor);
-        }
+        #region Check for updates
+
+        /// <summary>
+        /// This region contains check for updates functionality (from GitHub release page).
+        /// </summary>
+
+        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         private async Task CheckGitHubNewerVersion()
         {
@@ -73,7 +148,7 @@ namespace AutoClicker
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("michalzembron", "MZ-Auto-Clicker");
 
             Version latestGitHubVersion = new Version(releases[0].TagName);
-            Version localVersion = new Version(version.Remove(version.Length - 2, 2)); 
+            Version localVersion = new Version(version.Remove(version.Length - 2, 2));
 
             Console.WriteLine("The latest github release is tagged at {0}, current is {1}", latestGitHubVersion, version);
 
@@ -100,150 +175,38 @@ namespace AutoClicker
             Console.WriteLine(" Version {0}.", latestGitHubVersion);
         }
 
-        private void btnGetMousePos_MouseUp(object sender, MouseEventArgs e)
-        {
-            lv_MousePositions.Columns.Add("OneColumn");
-            lv_MousePositions.Columns[0].Width = this.lv_MousePositions.Width - 4;
-            lv_MousePositions.HeaderStyle = ColumnHeaderStyle.None;
-            lv_MousePositions.Items.Add(Cursor.Position.ToString());
-        }
-
-        private async void btnStartClicking_Click(object sender, EventArgs e)
-        {
-            // Hide program to system tray 
-            Hide();
-            notifyIcon.Visible = true;
-
-            isStopped = false;
-            int[] clickIntervals = new int[4];
-            int repeats;
-
-            Int32.TryParse(textBox_Hours.Text, out clickIntervals[0]);
-            Int32.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
-            Int32.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
-            Int32.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
-            waitFor = (clickIntervals[0] * 3600000) + (clickIntervals[1] * 60000) + (clickIntervals[2] * 1000) + clickIntervals[3];
-
-            if (lv_MousePositions.Items.Count != 0)
-            {
-                if (radioButton_Infinite.Checked == true)
-                {
-                    while (radioButton_Infinite.Checked)
-                    {
-                        for (int currentMousePosItem = 0; currentMousePosItem < lv_MousePositions.Items.Count; currentMousePosItem++)
-                        {
-                            if (isStopped) break;
-                            if (waitFor > 0)
-                            {
-                                string test = lv_MousePositions.Items[currentMousePosItem].ToString().Replace("ListViewItem: {{X=", "").Replace("Y=", "").Replace("}", "");
-                                string[] test2 = test.Split(new char[] { ',' }, 2);
-                                Cursor.Position = new Point(Int32.Parse(test2[0]), Int32.Parse(test2[1]));
-
-                                int clickRepeat = 1;
-                                if (comboBox_MouseButton.SelectedIndex == 0) clickRepeat = 1;
-                                else if (comboBox_MouseButton.SelectedIndex == 1) clickRepeat = 2;
-                                else if (comboBox_MouseButton.SelectedIndex == 2) clickRepeat = 3;
-
-                                for (int countRepeats = 0; countRepeats < clickRepeat; countRepeats++)
-                                {
-                                    if (comboBox_MouseButton.SelectedIndex == 0)
-                                    {
-                                        mouse_event(0x0002 | 0x0004, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                    }
-                                    else if (comboBox_MouseButton.SelectedIndex == 1)
-                                    {
-                                        mouse_event(0x0020 | 0x0040, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                    }
-                                    else if (comboBox_MouseButton.SelectedIndex == 2)
-                                    {
-                                        mouse_event(0x0008 | 0x0010, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                    }
-                                }
-                                await PutTaskDelay();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Click interval must be greater than 0 miliseconds.", "Wrong click interval", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                break;
-                            }
-                        }
-                    }
-                } else
-                {
-                    if(Int32.TryParse(textBox_Repeats.Text, out repeats))
-                    {
-                        for (int currentRepeat = 1; currentRepeat <= repeats; currentRepeat++)
-                        {
-                            for (int currentMousePosItem = 0; currentMousePosItem < lv_MousePositions.Items.Count; currentMousePosItem++)
-                            {
-                                if (isStopped) { break; }
-                                if (waitFor > 0)
-                                {
-                                    string test = lv_MousePositions.Items[currentMousePosItem].ToString().Replace("ListViewItem: {{X=", "").Replace("Y=", "").Replace("}", "");
-                                    string[] test2 = test.Split(new char[] { ',' }, 2);
-                                    Cursor.Position = new Point(Int32.Parse(test2[0]), Int32.Parse(test2[1]));
-
-                                    int clickRepeat = 1;
-                                    if (comboBox_MouseButton.SelectedIndex == 0) clickRepeat = 1;
-                                    else if (comboBox_MouseButton.SelectedIndex == 1) clickRepeat = 2;
-                                    else if (comboBox_MouseButton.SelectedIndex == 2) clickRepeat = 3;
-
-                                    for (int countRepeats=0 ; countRepeats < clickRepeat; countRepeats++)
-                                    {
-                                        if (comboBox_MouseButton.SelectedIndex == 0)
-                                        {
-                                            mouse_event(0x0002 | 0x0004, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                        }
-                                        else if (comboBox_MouseButton.SelectedIndex == 1)
-                                        {
-                                            mouse_event(0x0020 | 0x0040, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                        }
-                                        else if (comboBox_MouseButton.SelectedIndex == 2)
-                                        {
-                                            mouse_event(0x0008 | 0x0010, (uint)Cursor.Position.X, (uint)Cursor.Position.Y, 0, 0);
-                                        }
-                                    }
-                                    await PutTaskDelay();
-                                }
-                                else 
-                                {
-                                    MessageBox.Show("Click interval must be greater than 0 miliseconds.", "Wrong click interval", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void btnStopClicking_Click(object sender, EventArgs e)
-        {
-            isStopped = true;
-        }
-
-        private void textBox_AcceptOnlyNumbers(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void radioButton_Repeats_CheckedChanged(object sender, EventArgs e)
-        {
-            textBox_Repeats.Enabled = true;
-        }
-
-        private void radioButton_Infinite_CheckedChanged(object sender, EventArgs e)
-        {
-            textBox_Repeats.Enabled = false;
-        }
-
-        private async void btn_checkForUpdates_Click(object sender, EventArgs e)
+        private async void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await CheckGitHubNewerVersion();
         }
+        #endregion
+
+        #region Exit related methods
+
+        /// <summary>
+        /// This region contains methods related to exiting the program.
+        /// </summary>
+
+        private void OnProcessExit(object sender, EventArgs e)
+        {
+            UnregisterHotKey(programHandle, 0);
+            UnregisterHotKey(programHandle, 1);
+            Console.WriteLine("I'm out of here");
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
+        #endregion
+
+        #region Notify Icon / System Tray Icon
+
+        /// <summary>
+        /// This region contains methods related to system tray icon.
+        /// </summary>
+
+        public ContextMenu contextMenu_notifyIcon = new ContextMenu();
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -271,9 +234,69 @@ namespace AutoClicker
 
         public void createIconMenuStructure()
         {
-            contextMenu_notifyIcon.MenuItems.Add("Open MZ Auto Clicker", (s,e) => openFromNotifyIcon());
+            contextMenu_notifyIcon.MenuItems.Add("Open MZ Auto Clicker", (s, e) => openFromNotifyIcon());
             contextMenu_notifyIcon.MenuItems.Add("Exit", (s, e) => System.Windows.Forms.Application.Exit());
             notifyIcon.ContextMenu = contextMenu_notifyIcon;
         }
+        #endregion
+
+        #region Main window buttons, radiobuttons, listview etc.
+
+        /// <summary>
+        /// This region contains methods related to main window.
+        /// </summary>
+
+        private void btnGetMousePos_MouseUp(object sender, MouseEventArgs e)
+        {
+            lv_MousePositions.Columns.Add("OneColumn");
+            lv_MousePositions.Columns[0].Width = this.lv_MousePositions.Width - 4;
+            lv_MousePositions.HeaderStyle = ColumnHeaderStyle.None;
+            lv_MousePositions.Items.Add(Cursor.Position.ToString());
+        }
+
+        private void textBox_AcceptOnlyNumbers(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void radioButton_Repeats_CheckedChanged(object sender, EventArgs e)
+        {
+            textBox_Repeats.Enabled = true;
+        }
+
+        private void radioButton_Infinite_CheckedChanged(object sender, EventArgs e)
+        {
+            textBox_Repeats.Enabled = false;
+        }
+
+        private void radioButton_CurrentMousePos_CheckedChanged(object sender, EventArgs e)
+        {
+            lv_MousePositions.Enabled = false;
+            btnGetMousePos.Enabled = false;
+        }
+
+        private void radioButton_ClickLocList_CheckedChanged(object sender, EventArgs e)
+        {
+            lv_MousePositions.Enabled = true;
+            btnGetMousePos.Enabled = true;
+        }
+        #endregion
+
+        #region Top menu strip buttons
+
+        /// <summary>
+        /// This region contains methods related to top menu strip buttons.
+        /// </summary>
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.Show();
+        }
+
+        #endregion
     }
 }
