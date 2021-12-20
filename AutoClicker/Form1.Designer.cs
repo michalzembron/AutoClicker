@@ -33,6 +33,7 @@ namespace AutoClicker
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MZAC_Form));
             this.btnGetMousePos = new System.Windows.Forms.Button();
             this.lv_MousePositions = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnStartClicking = new System.Windows.Forms.Button();
             this.btnStopClicking = new System.Windows.Forms.Button();
             this.textBox_Hours = new System.Windows.Forms.TextBox();
@@ -61,56 +62,76 @@ namespace AutoClicker
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox_MinimizeOnStart = new System.Windows.Forms.CheckBox();
+            this.checkBox_HideToTray = new System.Windows.Forms.CheckBox();
+            this.checkBox_StayOnTop = new System.Windows.Forms.CheckBox();
+            this.btn_Clear = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox_ClickInterval.SuspendLayout();
             this.groupBox_Repeats.SuspendLayout();
             this.groupBox_ClickOptions.SuspendLayout();
             this.groupBox_ClickLocations.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetMousePos
             // 
+            this.btnGetMousePos.BackColor = System.Drawing.SystemColors.Control;
+            this.btnGetMousePos.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnGetMousePos.ForeColor = System.Drawing.Color.Black;
-            this.btnGetMousePos.Location = new System.Drawing.Point(6, 305);
+            this.btnGetMousePos.Location = new System.Drawing.Point(38, 315);
             this.btnGetMousePos.Name = "btnGetMousePos";
-            this.btnGetMousePos.Size = new System.Drawing.Size(119, 53);
+            this.btnGetMousePos.Size = new System.Drawing.Size(98, 53);
             this.btnGetMousePos.TabIndex = 5;
             this.btnGetMousePos.Text = "Drag and drop\r\nor\r\nCtrl + Shift + F1";
-            this.btnGetMousePos.UseVisualStyleBackColor = true;
-            this.btnGetMousePos.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnGetMousePos_MouseUp);
+            this.btnGetMousePos.UseVisualStyleBackColor = false;
+            this.btnGetMousePos.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BtnGetMousePos_MouseUp);
             // 
             // lv_MousePositions
             // 
+            this.lv_MousePositions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.lv_MousePositions.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lv_MousePositions.HideSelection = false;
+            this.lv_MousePositions.LabelWrap = false;
             this.lv_MousePositions.Location = new System.Drawing.Point(6, 22);
             this.lv_MousePositions.Name = "lv_MousePositions";
-            this.lv_MousePositions.Size = new System.Drawing.Size(119, 277);
+            this.lv_MousePositions.Size = new System.Drawing.Size(130, 287);
             this.lv_MousePositions.TabIndex = 6;
             this.lv_MousePositions.UseCompatibleStateImageBehavior = false;
             this.lv_MousePositions.View = System.Windows.Forms.View.Details;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 120;
+            // 
             // btnStartClicking
             // 
-            this.btnStartClicking.Location = new System.Drawing.Point(12, 364);
+            this.btnStartClicking.BackColor = System.Drawing.SystemColors.Control;
+            this.btnStartClicking.FlatAppearance.BorderSize = 0;
+            this.btnStartClicking.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnStartClicking.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnStartClicking.Location = new System.Drawing.Point(7, 378);
             this.btnStartClicking.Name = "btnStartClicking";
             this.btnStartClicking.Size = new System.Drawing.Size(109, 23);
             this.btnStartClicking.TabIndex = 7;
             this.btnStartClicking.Text = "Start (Ctrl + F10)";
-            this.btnStartClicking.UseVisualStyleBackColor = true;
-            this.btnStartClicking.Click += new System.EventHandler(this.btnStartClicking_Click);
+            this.btnStartClicking.UseVisualStyleBackColor = false;
+            this.btnStartClicking.Click += new System.EventHandler(this.BtnStartClicking_Click);
             // 
             // btnStopClicking
             // 
-            this.btnStopClicking.Location = new System.Drawing.Point(127, 364);
+            this.btnStopClicking.BackColor = System.Drawing.SystemColors.Control;
+            this.btnStopClicking.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnStopClicking.Location = new System.Drawing.Point(122, 378);
             this.btnStopClicking.Name = "btnStopClicking";
             this.btnStopClicking.Size = new System.Drawing.Size(109, 23);
             this.btnStopClicking.TabIndex = 14;
             this.btnStopClicking.Text = "Stop (Ctrl + F11)";
-            this.btnStopClicking.UseVisualStyleBackColor = true;
-            this.btnStopClicking.Click += new System.EventHandler(this.btnStopClicking_Click);
+            this.btnStopClicking.UseVisualStyleBackColor = false;
+            this.btnStopClicking.Click += new System.EventHandler(this.BtnStopClicking_Click);
             // 
             // textBox_Hours
             // 
@@ -120,7 +141,7 @@ namespace AutoClicker
             this.textBox_Hours.TabIndex = 15;
             this.textBox_Hours.Text = "0";
             this.textBox_Hours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox_Hours.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_AcceptOnlyNumbers);
+            this.textBox_Hours.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_AcceptOnlyNumbers);
             // 
             // label_h
             // 
@@ -150,7 +171,7 @@ namespace AutoClicker
             this.textBox_Minutes.TabIndex = 17;
             this.textBox_Minutes.Text = "0";
             this.textBox_Minutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox_Minutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_AcceptOnlyNumbers);
+            this.textBox_Minutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_AcceptOnlyNumbers);
             // 
             // label_s
             // 
@@ -170,7 +191,7 @@ namespace AutoClicker
             this.textBox_Seconds.TabIndex = 19;
             this.textBox_Seconds.Text = "0";
             this.textBox_Seconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox_Seconds.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_AcceptOnlyNumbers);
+            this.textBox_Seconds.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_AcceptOnlyNumbers);
             // 
             // label_ms
             // 
@@ -190,7 +211,7 @@ namespace AutoClicker
             this.textBox_Miliseconds.TabIndex = 21;
             this.textBox_Miliseconds.Text = "1000";
             this.textBox_Miliseconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox_Miliseconds.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_AcceptOnlyNumbers);
+            this.textBox_Miliseconds.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_AcceptOnlyNumbers);
             // 
             // radioButton_Repeats
             // 
@@ -204,7 +225,7 @@ namespace AutoClicker
             this.radioButton_Repeats.TabStop = true;
             this.radioButton_Repeats.Text = "Repeats:";
             this.radioButton_Repeats.UseVisualStyleBackColor = true;
-            this.radioButton_Repeats.CheckedChanged += new System.EventHandler(this.radioButton_Repeats_CheckedChanged);
+            this.radioButton_Repeats.CheckedChanged += new System.EventHandler(this.RadioButton_Repeats_CheckedChanged);
             // 
             // textBox_Repeats
             // 
@@ -214,7 +235,7 @@ namespace AutoClicker
             this.textBox_Repeats.TabIndex = 24;
             this.textBox_Repeats.Text = "1";
             this.textBox_Repeats.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox_Repeats.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_AcceptOnlyNumbers);
+            this.textBox_Repeats.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_AcceptOnlyNumbers);
             // 
             // radioButton_Infinite
             // 
@@ -227,7 +248,7 @@ namespace AutoClicker
             this.radioButton_Infinite.TabStop = true;
             this.radioButton_Infinite.Text = "Infinite";
             this.radioButton_Infinite.UseVisualStyleBackColor = true;
-            this.radioButton_Infinite.CheckedChanged += new System.EventHandler(this.radioButton_Infinite_CheckedChanged);
+            this.radioButton_Infinite.CheckedChanged += new System.EventHandler(this.RadioButton_Infinite_CheckedChanged);
             // 
             // comboBox_MouseButton
             // 
@@ -298,7 +319,7 @@ namespace AutoClicker
             this.groupBox_ClickOptions.Size = new System.Drawing.Size(351, 129);
             this.groupBox_ClickOptions.TabIndex = 31;
             this.groupBox_ClickOptions.TabStop = false;
-            this.groupBox_ClickOptions.Text = "Click Options";
+            this.groupBox_ClickOptions.Text = "Click Settings";
             // 
             // radioButton_ClickLocList
             // 
@@ -311,7 +332,7 @@ namespace AutoClicker
             this.radioButton_ClickLocList.TabStop = true;
             this.radioButton_ClickLocList.Text = "Click location list";
             this.radioButton_ClickLocList.UseVisualStyleBackColor = true;
-            this.radioButton_ClickLocList.CheckedChanged += new System.EventHandler(this.radioButton_ClickLocList_CheckedChanged);
+            this.radioButton_ClickLocList.CheckedChanged += new System.EventHandler(this.RadioButton_ClickLocList_CheckedChanged);
             // 
             // radioButton_CurrentMousePos
             // 
@@ -325,7 +346,7 @@ namespace AutoClicker
             this.radioButton_CurrentMousePos.TabStop = true;
             this.radioButton_CurrentMousePos.Text = "Current mouse position";
             this.radioButton_CurrentMousePos.UseVisualStyleBackColor = true;
-            this.radioButton_CurrentMousePos.CheckedChanged += new System.EventHandler(this.radioButton_CurrentMousePos_CheckedChanged);
+            this.radioButton_CurrentMousePos.CheckedChanged += new System.EventHandler(this.RadioButton_CurrentMousePos_CheckedChanged);
             // 
             // lbl_ClickLocation
             // 
@@ -354,7 +375,8 @@ namespace AutoClicker
             this.comboBox_ClickType.Items.AddRange(new object[] {
             "Single",
             "Double",
-            "Triple"});
+            "Triple",
+            "None"});
             this.comboBox_ClickType.Location = new System.Drawing.Point(92, 49);
             this.comboBox_ClickType.Name = "comboBox_ClickType";
             this.comboBox_ClickType.Size = new System.Drawing.Size(121, 23);
@@ -362,32 +384,32 @@ namespace AutoClicker
             // 
             // groupBox_ClickLocations
             // 
+            this.groupBox_ClickLocations.Controls.Add(this.btn_Clear);
             this.groupBox_ClickLocations.Controls.Add(this.lv_MousePositions);
             this.groupBox_ClickLocations.Controls.Add(this.btnGetMousePos);
             this.groupBox_ClickLocations.ForeColor = System.Drawing.Color.White;
             this.groupBox_ClickLocations.Location = new System.Drawing.Point(364, 27);
             this.groupBox_ClickLocations.Name = "groupBox_ClickLocations";
-            this.groupBox_ClickLocations.Size = new System.Drawing.Size(131, 364);
+            this.groupBox_ClickLocations.Size = new System.Drawing.Size(142, 374);
             this.groupBox_ClickLocations.TabIndex = 32;
             this.groupBox_ClickLocations.TabStop = false;
-            this.groupBox_ClickLocations.Text = "Click Locations:";
+            this.groupBox_ClickLocations.Text = "Click Locations";
             // 
             // notifyIcon
             // 
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "MZ Auto Clicker";
             this.notifyIcon.Visible = true;
-            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDoubleClick);
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.checkForUpdatesToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(504, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(512, 24);
             this.menuStrip1.TabIndex = 34;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -395,8 +417,9 @@ namespace AutoClicker
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Font = new System.Drawing.Font("Calibri", 9.75F);
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
@@ -404,36 +427,87 @@ namespace AutoClicker
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // checkForUpdatesToolStripMenuItem
-            // 
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(115, 20);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Font = new System.Drawing.Font("Calibri", 9.75F);
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.helpToolStripMenuItem.Text = "About";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
-            // aboutToolStripMenuItem
+            // checkBox_MinimizeOnStart
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.checkBox_MinimizeOnStart.AutoSize = true;
+            this.checkBox_MinimizeOnStart.ForeColor = System.Drawing.Color.White;
+            this.checkBox_MinimizeOnStart.Location = new System.Drawing.Point(6, 22);
+            this.checkBox_MinimizeOnStart.Name = "checkBox_MinimizeOnStart";
+            this.checkBox_MinimizeOnStart.Size = new System.Drawing.Size(123, 19);
+            this.checkBox_MinimizeOnStart.TabIndex = 35;
+            this.checkBox_MinimizeOnStart.Text = "Minimize on start";
+            this.checkBox_MinimizeOnStart.UseVisualStyleBackColor = true;
+            this.checkBox_MinimizeOnStart.CheckedChanged += new System.EventHandler(this.CheckBox_MinimizeOnStart_CheckedChanged);
+            // 
+            // checkBox_HideToTray
+            // 
+            this.checkBox_HideToTray.AutoSize = true;
+            this.checkBox_HideToTray.ForeColor = System.Drawing.Color.White;
+            this.checkBox_HideToTray.Location = new System.Drawing.Point(6, 47);
+            this.checkBox_HideToTray.Name = "checkBox_HideToTray";
+            this.checkBox_HideToTray.Size = new System.Drawing.Size(90, 19);
+            this.checkBox_HideToTray.TabIndex = 36;
+            this.checkBox_HideToTray.Text = "Hide to tray";
+            this.checkBox_HideToTray.UseVisualStyleBackColor = true;
+            this.checkBox_HideToTray.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            // 
+            // checkBox_StayOnTop
+            // 
+            this.checkBox_StayOnTop.AutoSize = true;
+            this.checkBox_StayOnTop.ForeColor = System.Drawing.Color.White;
+            this.checkBox_StayOnTop.Location = new System.Drawing.Point(135, 22);
+            this.checkBox_StayOnTop.Name = "checkBox_StayOnTop";
+            this.checkBox_StayOnTop.Size = new System.Drawing.Size(87, 19);
+            this.checkBox_StayOnTop.TabIndex = 37;
+            this.checkBox_StayOnTop.Text = "Stay on top";
+            this.checkBox_StayOnTop.UseVisualStyleBackColor = true;
+            this.checkBox_StayOnTop.CheckedChanged += new System.EventHandler(this.CheckBox_StayOnTop_CheckedChanged);
+            // 
+            // btn_Clear
+            // 
+            this.btn_Clear.BackColor = System.Drawing.Color.Transparent;
+            this.btn_Clear.FlatAppearance.BorderSize = 0;
+            this.btn_Clear.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.HotTrack;
+            this.btn_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Clear.ForeColor = System.Drawing.Color.White;
+            this.btn_Clear.Image = global::MZAutoClicker.Properties.Resources.TrashIcon;
+            this.btn_Clear.Location = new System.Drawing.Point(6, 326);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(29, 30);
+            this.btn_Clear.TabIndex = 36;
+            this.btn_Clear.UseVisualStyleBackColor = false;
+            this.btn_Clear.Click += new System.EventHandler(this.Btn_Clear_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBox_MinimizeOnStart);
+            this.groupBox1.Controls.Add(this.checkBox_StayOnTop);
+            this.groupBox1.Controls.Add(this.checkBox_HideToTray);
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(7, 301);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(351, 72);
+            this.groupBox1.TabIndex = 38;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Other Settings";
             // 
             // MZAC_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(504, 399);
+            this.ClientSize = new System.Drawing.Size(512, 413);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox_ClickLocations);
             this.Controls.Add(this.groupBox_ClickOptions);
             this.Controls.Add(this.groupBox_Repeats);
@@ -459,6 +533,8 @@ namespace AutoClicker
             this.groupBox_ClickLocations.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -493,11 +569,15 @@ namespace AutoClicker
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.RadioButton radioButton_CurrentMousePos;
         private System.Windows.Forms.RadioButton radioButton_ClickLocList;
         private System.Windows.Forms.Label lbl_ClickLocation;
+        private System.Windows.Forms.CheckBox checkBox_MinimizeOnStart;
+        private System.Windows.Forms.Button btn_Clear;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.CheckBox checkBox_HideToTray;
+        private System.Windows.Forms.CheckBox checkBox_StayOnTop;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

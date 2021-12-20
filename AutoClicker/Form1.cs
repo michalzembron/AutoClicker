@@ -1,24 +1,26 @@
 ﻿using MZAutoClicker;
-using Octokit;
+using MZAutoClicker.PerformMouseClick;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutoClicker
 {
     public partial class MZAC_Form : Form
     {
-        IntPtr programHandle;
-        PerformMouseClick performMouseClick = new PerformMouseClick();
+        public ContextMenu contextMenu_notifyIcon = new ContextMenu();
+
+        private readonly IntPtr programHandle;
+        private readonly string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        int waitFor;
+        private bool minimizeOnStart = true;
+        private bool hideToTray = true;
 
         public MZAC_Form()
         {
             InitializeComponent();
-            this.Text = "MZ Auto Clicker " + version.Remove(version.Length - 2, 2);
+            Text = "MZ Auto Clicker " + version.Remove(version.Length - 2, 2);
 
             comboBox_MouseButton.SelectedIndex = 0;
             comboBox_ClickType.SelectedIndex = 0;
@@ -31,76 +33,77 @@ namespace AutoClicker
             lv_MousePositions.Enabled = false;
             btnGetMousePos.Enabled = false;
 
+            // Set width of listview to hide horizontal scrollbar
+            lv_MousePositions.Columns[0].Width = lv_MousePositions.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
-            createIconMenuStructure();
+            CreateIconMenuStructure();
         }
 
         #region Start and Stop clicking
-
         /// <summary>
         /// This region contains Start and Stop clicking functionality.
         /// </summary>
-
-        int waitFor;
-
-        private void btnStartClicking_Click(object sender, EventArgs e)
+        private void BtnStartClicking_Click(object sender, EventArgs e)
         {
-            int[] clickIntervals = new int[4];
-            int repeats;
-
-            Int32.TryParse(textBox_Hours.Text, out clickIntervals[0]);
-            Int32.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
-            Int32.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
-            Int32.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
-            waitFor = (clickIntervals[0] * 3600000) + (clickIntervals[1] * 60000) + (clickIntervals[2] * 1000) + clickIntervals[3];
-
-            Int32.TryParse(textBox_Repeats.Text, out repeats);
-
-            Hide();
-            notifyIcon.Visible = true;
-            if (radioButton_CurrentMousePos.Checked)
-            {
-                performMouseClick.StartClicking(waitFor, repeats, "ClickOnCurrentMousePosition", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
-            }
-            else if (radioButton_ClickLocList.Checked)
-            {
-                performMouseClick.StartClicking(waitFor, repeats, "ClickLocationList", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
-            }
+            StartClicking();
         }
 
-        private void btnStopClicking_Click(object sender, EventArgs e)
+        private void BtnStopClicking_Click(object sender, EventArgs e)
         {
-            performMouseClick.isStopped = true;
+            PerformMouseClick.isStopped = true;
         }
 
         private void StartClicking()
         {
-            int[] clickIntervals = new int[4];
-            int repeats;
+            if (radioButton_ClickLocList.Checked && lv_MousePositions.Items.Count <= 0) return;
 
-            Int32.TryParse(textBox_Hours.Text, out clickIntervals[0]);
-            Int32.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
-            Int32.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
-            Int32.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
+            int[] clickIntervals = new int[4];
+
+            int.TryParse(textBox_Hours.Text, out clickIntervals[0]);
+            int.TryParse(textBox_Minutes.Text, out clickIntervals[1]);
+            int.TryParse(textBox_Seconds.Text, out clickIntervals[2]);
+            int.TryParse(textBox_Miliseconds.Text, out clickIntervals[3]);
             waitFor = (clickIntervals[0] * 3600000) + (clickIntervals[1] * 60000) + (clickIntervals[2] * 1000) + clickIntervals[3];
 
-            Int32.TryParse(textBox_Repeats.Text, out repeats);
+            int.TryParse(textBox_Repeats.Text, out int repeats);
 
-            Hide();
-            notifyIcon.Visible = true;
-            performMouseClick.StartClicking(waitFor, repeats, "ClickLocationList", radioButton_Infinite.Checked, lv_MousePositions, comboBox_MouseButton.SelectedIndex);
+            if (minimizeOnStart)
+            {
+                WindowState = FormWindowState.Minimized;
+                if (hideToTray)
+                {
+                    Hide();
+                    notifyIcon.Visible = true;
+                }  
+            }
+
+            if (radioButton_CurrentMousePos.Checked)
+                PerformMouseClick.StartClicking(
+                    waitFor: waitFor, 
+                    infinite: radioButton_Infinite.Checked, 
+                    repeats, "ClickOnCurrentMousePosition", 
+                    lv_MousePositions, 
+                    comboBox_MouseButton.SelectedIndex, 
+                    comboBox_ClickType.SelectedIndex);
+            else if (radioButton_ClickLocList.Checked)
+                PerformMouseClick.StartClicking(
+                    waitFor: waitFor, 
+                    infinite: radioButton_Infinite.Checked, 
+                    repeats, "ClickLocationList", 
+                    lv_MousePositions, 
+                    comboBox_MouseButton.SelectedIndex, 
+                    comboBox_ClickType.SelectedIndex);
         }
 
         private void StopClicking()
         {
-            Console.WriteLine("STOP (Form1-StopClicking)");
-            performMouseClick.isStopped = true;
+            PerformMouseClick.isStopped = true;
         }
         #endregion
 
         #region HotKey registration
-
         /// <summary>
         /// This region contains HotKey registration functionality.
         /// </summary>
@@ -124,8 +127,6 @@ namespace AutoClicker
                 }
                 else if (m.WParam.ToInt32() == 2)
                 {
-                    lv_MousePositions.Columns.Add("OneColumn");
-                    lv_MousePositions.Columns[0].Width = this.lv_MousePositions.Width - 4;
                     lv_MousePositions.HeaderStyle = ColumnHeaderStyle.None;
                     lv_MousePositions.Items.Add(Cursor.Position.ToString());
                 }
@@ -134,55 +135,7 @@ namespace AutoClicker
         }
         #endregion
 
-        #region Check for updates
-
-        /// <summary>
-        /// This region contains check for updates functionality (from GitHub release page).
-        /// </summary>
-
-        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-        private async Task CheckGitHubNewerVersion()
-        {
-            GitHubClient client = new GitHubClient(new ProductHeaderValue("MZ-Auto-Clicker"));
-            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("michalzembron", "MZ-Auto-Clicker");
-
-            Version latestGitHubVersion = new Version(releases[0].TagName);
-            Version localVersion = new Version(version.Remove(version.Length - 2, 2));
-
-            Console.WriteLine("The latest github release is tagged at {0}, current is {1}", latestGitHubVersion, version);
-
-            Console.Write("Version {0} is ", localVersion);
-            switch (localVersion.CompareTo(latestGitHubVersion))
-            {
-                case 0:
-                    Console.Write("the same as");
-                    MessageBox.Show(localVersion + " is newest version of MZ Auto Clicker, there is no need to update.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
-                case 1:
-                    Console.Write("later than");
-                    MessageBox.Show(localVersion + " is newest version of MZ Auto Clicker, there is no need to update.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
-                case -1:
-                    Console.Write("earlier than");
-                    if (MessageBox.Show("Local version is: " + localVersion + ", but the newest version of MZ Auto Clicker is: " + latestGitHubVersion +
-                            "\n\nPress \"YES\" to go to the latest version download page (GitHub).", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                    {
-                        Process.Start("https://github.com/michalzembron/MZ-Auto-Clicker/releases");
-                    }
-                    break;
-            }
-            Console.WriteLine(" Version {0}.", latestGitHubVersion);
-        }
-
-        private async void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            await CheckGitHubNewerVersion();
-        }
-        #endregion
-
         #region Exit related methods
-
         /// <summary>
         /// This region contains methods related to exiting the program.
         /// </summary>
@@ -191,23 +144,18 @@ namespace AutoClicker
         {
             UnregisterHotKey(programHandle, 0);
             UnregisterHotKey(programHandle, 1);
-            Console.WriteLine("I'm out of here");
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.Application.Exit();
+            Application.Exit();
         }
         #endregion
 
         #region Notify Icon / System Tray Icon
-
         /// <summary>
         /// This region contains methods related to system tray icon.
         /// </summary>
-
-        public ContextMenu contextMenu_notifyIcon = new ContextMenu();
-
         private void Form1_Resize(object sender, EventArgs e)
         {
             //if the form is minimized  
@@ -215,46 +163,44 @@ namespace AutoClicker
             //and show the system tray icon (represented by the NotifyIcon control)  
             if (this.WindowState == FormWindowState.Minimized)
             {
-                Hide();
-                notifyIcon.Visible = true;
+                if (hideToTray)
+                {
+                    Hide();
+                    notifyIcon.Visible = true;
+                } 
             }
         }
 
-        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            openFromNotifyIcon();
+            OpenFromNotifyIcon();
         }
 
-        private void openFromNotifyIcon()
+        private void OpenFromNotifyIcon()
         {
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
 
-        public void createIconMenuStructure()
+        public void CreateIconMenuStructure()
         {
-            contextMenu_notifyIcon.MenuItems.Add("Open MZ Auto Clicker", (s, e) => openFromNotifyIcon());
-            contextMenu_notifyIcon.MenuItems.Add("Exit", (s, e) => System.Windows.Forms.Application.Exit());
+            contextMenu_notifyIcon.MenuItems.Add("Open MZ Auto Clicker", (s, e) => OpenFromNotifyIcon());
+            contextMenu_notifyIcon.MenuItems.Add("Exit", (s, e) => Application.Exit());
             notifyIcon.ContextMenu = contextMenu_notifyIcon;
         }
         #endregion
 
-        #region Main window buttons, radiobuttons, listview etc.
-
         /// <summary>
         /// This region contains methods related to main window.
         /// </summary>
-
-        private void btnGetMousePos_MouseUp(object sender, MouseEventArgs e)
+        #region Main window buttons, radiobuttons, listview etc.
+        private void BtnGetMousePos_MouseUp(object sender, MouseEventArgs e)
         {
-            lv_MousePositions.Columns.Add("OneColumn");
-            lv_MousePositions.Columns[0].Width = this.lv_MousePositions.Width - 4;
-            lv_MousePositions.HeaderStyle = ColumnHeaderStyle.None;
             lv_MousePositions.Items.Add(Cursor.Position.ToString());
         }
 
-        private void textBox_AcceptOnlyNumbers(object sender, KeyPressEventArgs e)
+        private void TextBox_AcceptOnlyNumbers(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -262,41 +208,69 @@ namespace AutoClicker
             }
         }
 
-        private void radioButton_Repeats_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton_Repeats_CheckedChanged(object sender, EventArgs e)
         {
             textBox_Repeats.Enabled = true;
         }
 
-        private void radioButton_Infinite_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton_Infinite_CheckedChanged(object sender, EventArgs e)
         {
             textBox_Repeats.Enabled = false;
         }
 
-        private void radioButton_CurrentMousePos_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton_CurrentMousePos_CheckedChanged(object sender, EventArgs e)
         {
             lv_MousePositions.Enabled = false;
             btnGetMousePos.Enabled = false;
         }
 
-        private void radioButton_ClickLocList_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton_ClickLocList_CheckedChanged(object sender, EventArgs e)
         {
             lv_MousePositions.Enabled = true;
             btnGetMousePos.Enabled = true;
         }
-        #endregion
 
-        #region Top menu strip buttons
+        private void CheckBox_MinimizeOnStart_CheckedChanged(object sender, EventArgs e)
+        {
+            minimizeOnStart = checkBox_MinimizeOnStart.Checked;
+        }
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            hideToTray = checkBox_HideToTray.Checked;
+        }
+
+        private void CheckBox_StayOnTop_CheckedChanged(object sender, EventArgs e)
+        {
+            TopMost = checkBox_StayOnTop.Checked;
+        }
+        #endregion
 
         /// <summary>
         /// This region contains methods related to top menu strip buttons.
         /// </summary>
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        #region Top menu strip buttons
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutForm aboutForm = new AboutForm();
-            aboutForm.Show();
+            About about = new About();
+            about.Show();
         }
+        #endregion
 
+        /// <summary>
+        /// Clear mouse position list
+        /// </summary>
+        #region Clear mouse positions
+        private void Btn_Clear_Click(object sender, EventArgs e)
+        {
+            lv_MousePositions.Clear();
+            lv_MousePositions.Columns.Add(new ColumnHeader {
+                Text = "",
+                Name = "col1"
+            });
+            // Set width of listview to hide horizontal scrollbar
+            lv_MousePositions.Columns[0].Width = lv_MousePositions.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+        }
         #endregion
     }
 }
