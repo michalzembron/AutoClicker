@@ -11,40 +11,53 @@ namespace AutoClicker
     {
         public ContextMenu contextMenu_notifyIcon = new ContextMenu();
 
-        private readonly IntPtr programHandle;
-        private readonly string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        int waitFor;
-        private bool minimizeOnStart = true;
-        private bool hideToTray = true;
+        private IntPtr programHandle;
+        private readonly string version = Assembly.GetExecutingAssembly().GetName().Version.ToString().Remove(Assembly.GetExecutingAssembly().GetName().Version.ToString().Length - 2, 2);
+        
+        private bool minimizeOnStart;
+        private bool hideToTray;
+        private int waitFor;
 
         public MZAC_Form()
         {
             InitializeComponent();
-            Text = "MZ Auto Clicker " + version.Remove(version.Length - 2, 2);
 
+            Initialize();
+            
+            CreateIconMenuStructure();
+        }
+
+        /// <summary>
+        /// Responsible for program initialization. Set to run on program startup.
+        /// </summary>
+        #region Initialization
+        private void Initialize()
+        {
+            // Set program version text
+            Text = "MZ Auto Clicker " + version;
+
+            // Select first item in combo boxes
             comboBox_MouseButton.SelectedIndex = 0;
             comboBox_ClickType.SelectedIndex = 0;
 
+            // Register HotKeys
             programHandle = Handle;
             RegisterHotKey(programHandle, 0, 0x0002, (int)Keys.F10);
             RegisterHotKey(programHandle, 1, 0x0002, (int)Keys.F11);
             RegisterHotKey(programHandle, 2, 0x0002 | 0x0004, (int)Keys.F1);
 
-            lv_MousePositions.Enabled = false;
-            btnGetMousePos.Enabled = false;
-
             // Set width of listview to hide horizontal scrollbar
             lv_MousePositions.Columns[0].Width = lv_MousePositions.Width - 4 - SystemInformation.VerticalScrollBarWidth;
 
+            // When exiting from the app - unregister hotkeys
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-
-            CreateIconMenuStructure();
         }
+        #endregion
 
-        #region Start and Stop clicking
         /// <summary>
         /// This region contains Start and Stop clicking functionality.
         /// </summary>
+        #region Start and Stop clicking
         private void BtnStartClicking_Click(object sender, EventArgs e)
         {
             StartClicking();
@@ -103,11 +116,10 @@ namespace AutoClicker
         }
         #endregion
 
-        #region HotKey registration
         /// <summary>
         /// This region contains HotKey registration functionality.
         /// </summary>
-
+        #region HotKey registration
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
         [DllImport("user32.dll")]
@@ -135,11 +147,10 @@ namespace AutoClicker
         }
         #endregion
 
-        #region Exit related methods
         /// <summary>
         /// This region contains methods related to exiting the program.
         /// </summary>
-
+        #region Exit related methods
         private void OnProcessExit(object sender, EventArgs e)
         {
             UnregisterHotKey(programHandle, 0);
@@ -152,10 +163,10 @@ namespace AutoClicker
         }
         #endregion
 
-        #region Notify Icon / System Tray Icon
         /// <summary>
         /// This region contains methods related to system tray icon.
         /// </summary>
+        #region Notify Icon / System Tray Icon
         private void Form1_Resize(object sender, EventArgs e)
         {
             //if the form is minimized  
@@ -221,13 +232,11 @@ namespace AutoClicker
         private void RadioButton_CurrentMousePos_CheckedChanged(object sender, EventArgs e)
         {
             lv_MousePositions.Enabled = false;
-            btnGetMousePos.Enabled = false;
         }
 
         private void RadioButton_ClickLocList_CheckedChanged(object sender, EventArgs e)
         {
             lv_MousePositions.Enabled = true;
-            btnGetMousePos.Enabled = true;
         }
 
         private void CheckBox_MinimizeOnStart_CheckedChanged(object sender, EventArgs e)
@@ -235,7 +244,7 @@ namespace AutoClicker
             minimizeOnStart = checkBox_MinimizeOnStart.Checked;
         }
 
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox_HideToTray_CheckedChanged(object sender, EventArgs e)
         {
             hideToTray = checkBox_HideToTray.Checked;
         }

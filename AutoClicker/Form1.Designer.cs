@@ -58,6 +58,7 @@ namespace AutoClicker
             this.lbl_ClickType = new System.Windows.Forms.Label();
             this.comboBox_ClickType = new System.Windows.Forms.ComboBox();
             this.groupBox_ClickLocations = new System.Windows.Forms.GroupBox();
+            this.btn_Clear = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +67,6 @@ namespace AutoClicker
             this.checkBox_MinimizeOnStart = new System.Windows.Forms.CheckBox();
             this.checkBox_HideToTray = new System.Windows.Forms.CheckBox();
             this.checkBox_StayOnTop = new System.Windows.Forms.CheckBox();
-            this.btn_Clear = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox_ClickInterval.SuspendLayout();
             this.groupBox_Repeats.SuspendLayout();
@@ -93,6 +93,7 @@ namespace AutoClicker
             // 
             this.lv_MousePositions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
+            this.lv_MousePositions.Enabled = false;
             this.lv_MousePositions.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lv_MousePositions.HideSelection = false;
             this.lv_MousePositions.LabelWrap = false;
@@ -395,11 +396,25 @@ namespace AutoClicker
             this.groupBox_ClickLocations.TabStop = false;
             this.groupBox_ClickLocations.Text = "Click Locations";
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.BackColor = System.Drawing.Color.Transparent;
+            this.btn_Clear.FlatAppearance.BorderSize = 0;
+            this.btn_Clear.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.HotTrack;
+            this.btn_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Clear.ForeColor = System.Drawing.Color.White;
+            this.btn_Clear.Image = global::MZAutoClicker.Properties.Resources.TrashIcon;
+            this.btn_Clear.Location = new System.Drawing.Point(6, 326);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(29, 30);
+            this.btn_Clear.TabIndex = 36;
+            this.btn_Clear.UseVisualStyleBackColor = false;
+            this.btn_Clear.Click += new System.EventHandler(this.Btn_Clear_Click);
+            // 
             // notifyIcon
             // 
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "MZ Auto Clicker";
-            this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDoubleClick);
             // 
             // menuStrip1
@@ -425,7 +440,7 @@ namespace AutoClicker
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -459,7 +474,7 @@ namespace AutoClicker
             this.checkBox_HideToTray.TabIndex = 36;
             this.checkBox_HideToTray.Text = "Hide to tray";
             this.checkBox_HideToTray.UseVisualStyleBackColor = true;
-            this.checkBox_HideToTray.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            this.checkBox_HideToTray.CheckedChanged += new System.EventHandler(this.CheckBox_HideToTray_CheckedChanged);
             // 
             // checkBox_StayOnTop
             // 
@@ -472,21 +487,6 @@ namespace AutoClicker
             this.checkBox_StayOnTop.Text = "Stay on top";
             this.checkBox_StayOnTop.UseVisualStyleBackColor = true;
             this.checkBox_StayOnTop.CheckedChanged += new System.EventHandler(this.CheckBox_StayOnTop_CheckedChanged);
-            // 
-            // btn_Clear
-            // 
-            this.btn_Clear.BackColor = System.Drawing.Color.Transparent;
-            this.btn_Clear.FlatAppearance.BorderSize = 0;
-            this.btn_Clear.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.HotTrack;
-            this.btn_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_Clear.ForeColor = System.Drawing.Color.White;
-            this.btn_Clear.Image = global::MZAutoClicker.Properties.Resources.TrashIcon;
-            this.btn_Clear.Location = new System.Drawing.Point(6, 326);
-            this.btn_Clear.Name = "btn_Clear";
-            this.btn_Clear.Size = new System.Drawing.Size(29, 30);
-            this.btn_Clear.TabIndex = 36;
-            this.btn_Clear.UseVisualStyleBackColor = false;
-            this.btn_Clear.Click += new System.EventHandler(this.Btn_Clear_Click);
             // 
             // groupBox1
             // 
@@ -580,4 +580,3 @@ namespace AutoClicker
         private System.Windows.Forms.GroupBox groupBox1;
     }
 }
-
