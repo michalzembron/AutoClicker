@@ -11,4 +11,4 @@
 
 Something is missing ? Ask for a feature in [Issues Tab](https://github.com/michalzembron/MZ-Auto-Clicker/issues/new "Issues Tab") !
 
-![MZ Auto Clicker 1.5.0](https://i.imgur.com/K7tFetm.png)
+![MZ Auto Clicker 1.5.1](https://i.imgur.com/mLLqfI2.png)
